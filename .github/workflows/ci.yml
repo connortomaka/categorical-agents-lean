@@ -14,13 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Installs elan + the toolchain pinned in `lean-toolchain`, then runs
-      # `lake build`. The build SUCCEEDS only if every theorem in the repo
-      # type-checks, so a green check mark here is a machine-verified proof
-      # that the whole development is correct.
-      - name: Build and verify
-        uses: leanprover/lean-action@v1
-        with:
-          build: true
-          test: false
-          lint: false
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Build and verify (lake build)
+        run: lake build
