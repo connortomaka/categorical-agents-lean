@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Proof-check (lake build)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Installs elan + the toolchain pinned in `lean-toolchain`, then runs
+      # `lake build`. The build SUCCEEDS only if every theorem in the repo
+      # type-checks, so a green check mark here is a machine-verified proof
+      # that the whole development is correct.
+      - name: Build and verify
+        uses: leanprover/lean-action@v1
+        with:
+          build: true
+          test: false
+          lint: false

@@ -1,0 +1,8 @@
+# Lake build artifacts
+/.lake/
+/build/
+/lake-packages/
+
+# Editor / OS noise
+*.olean
+.DS_Store
