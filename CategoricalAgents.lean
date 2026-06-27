@@ -14,3 +14,4 @@ import CategoricalAgents.Containers
 import CategoricalAgents.Monad
 import CategoricalAgents.Lens
 import CategoricalAgents.Agents
+import CategoricalAgents.Delegation
