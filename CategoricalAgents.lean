@@ -15,3 +15,4 @@ import CategoricalAgents.Monad
 import CategoricalAgents.Lens
 import CategoricalAgents.Agents
 import CategoricalAgents.Delegation
+import CategoricalAgents.Migration
