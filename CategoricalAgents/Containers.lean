@@ -28,7 +28,7 @@ namespace Container
 /-- The extension of a container as a functor on types:
     `⟦S ◁ P⟧ X = Σ s : Shape, (Pos s → X)`.
     An element is "a shape, together with an `X` at every position". -/
-def Ext (C : Container) (X : Type w) : Type (max (max u v) w) :=
+def Ext (C : Container) (X : Type w) :=
   Σ s : C.Shape, C.Pos s → X
 
 /-- Functorial action of the extension on a morphism: relabel the data at every
@@ -40,12 +40,14 @@ def map (C : Container) {X Y : Type w} (f : X → Y) : C.Ext X → C.Ext Y :=
 theorem map_id (C : Container) {X : Type w} :
     C.map (fun x : X => x) = (fun e : C.Ext X => e) := by
   funext p
+  obtain ⟨s, v⟩ := p
   rfl
 
 /-- The extension preserves composition (`f` then `g`). -/
 theorem map_comp (C : Container) {X Y Z : Type w} (f : X → Y) (g : Y → Z) :
     C.map (fun x => g (f x)) = (fun e => C.map g (C.map f e)) := by
   funext p
+  obtain ⟨s, v⟩ := p
   rfl
 
 /-- A morphism of containers `(S ◁ P) ⇒ (T ◁ Q)`: a map on shapes, together
