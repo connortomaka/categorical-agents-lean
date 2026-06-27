@@ -1,6 +1,6 @@
 # Design Notes
 
-This document explains *why* the repository is built the way it is: the
+Explanation on approach and why it was built the way it is: the
 mathematical choices, how each construction maps onto the problem of
 **verifiable multi-agent orchestration**, and where the ideas come from in the
 literature. The code in `CategoricalAgents/` is the formal artifact; this is the
@@ -10,28 +10,27 @@ The guiding idea is the one made precise by the **Curry–Howard–Lambek
 correspondence**: *programs*, *proofs*, and *morphisms in a category* are three
 views of the same thing. If an agent is a typed morphism, then wiring agents
 together is composing morphisms, and checking that a wiring is valid is checking
-a proof. "Deploying a system" and "proving a theorem" become the same act — so a
+a proof. "Deploying a system" and "proving a theorem" become the same act, per the Kodamai white paper — so a
 type checker that accepts the program *is* the theorem prover that certifies the
-system. Everything below is an attempt to make that slogan literal in Lean.
+system. Everything below is an attempt to make that literal in Lean.
 
 ---
 
-## Why pure Lean 4, no Mathlib
+## Why pure Lean 4, w/o Mathlib
 
 Mathlib already contains a vast, battle-tested `CategoryTheory` library. Building
 on it would be the right call for research. This repo deliberately does **not**,
 for three reasons:
 
-1. **First-principles legibility.** The point of a portfolio piece is to show
-   that the author can *state and prove* the laws, not import them. Every
+1. **First-principles legibility.** The point here is to show
+   that I can *state and prove* the laws, not import them. Every
    structure here (`Category`, `Funct`, `NatTrans`, `Container`, `KMonad`,
    `Lens`, `Agent`) carries its laws as explicit fields, and every law is
    discharged by a proof you can read in a few lines.
 2. **Self-containment and build speed.** No dependency resolution, no Mathlib
    compile, no version drift. `lake build` checks the whole thing from nothing
-   but the pinned toolchain, which keeps CI fast and reproducible.
-3. **Honest scope.** A small, fully-proved core is more convincing than a large
-   wrapper around someone else's lemmas.
+   but the pinned toolchain, which keeps CI fast and reproducible. This was as
+   primary and desirable as point 1's legibility assertion.
 
 The cost is that the constructions are intentionally minimal (monomorphic
 lenses, a hand-rolled `Option` monad, `Type`-valued categories). The design
@@ -139,8 +138,8 @@ This is where the pieces become the thing the whitepaper is about.
 
 ## How the theorem-prover correspondence is *literal* here
 
-The whitepaper's strongest claim is that "deploying an agent system is equivalent
-to proving the theorem of its correctness." In this repo that is not a metaphor:
+The Kodamai whitepaper's  claim is that "deploying an agent system is equivalent
+to proving the theorem of its correctness." In this repo that is:
 
 * An agent is a term whose type is its specification.
 * Composing agents builds a larger term whose type is the composite spec.
@@ -172,7 +171,7 @@ These are scoped out on purpose; listing them is part of the design.
 * **No vertical/horizontal `NatTrans` composition.** Only identities are built.
 
 None of these affect the proofs that *are* present; they are extensions, not
-patches.
+patches. Confirm correctness here, second pair of eyes preferance here.
 
 ---
 
@@ -180,6 +179,8 @@ patches.
 
 The constructions are standard; these are the sources behind them.
 
+- Avigad, J., & Massot, P. (2026). Mathematics in Lean (Release v4.19.0).
+  Lean community. https://leanprover-community.github.io/mathematics_in_lean/
 - M. Abbott, T. Altenkirch, N. Ghani — *Containers: Constructing Strictly
   Positive Types* (TCS, 2005). The container model used in `Containers.lean`.
 - E. Moggi — *Notions of Computation and Monads* (Information and Computation,
