@@ -1,7 +1,7 @@
 /-
   CategoricalAgents.Agents
   ------------------------
-  The payoff. We model agents as typed morphisms and assemble them with
+ Attempt to model agents as typed morphisms and assemble them with
   combinators whose correctness is guaranteed by the type checker:
 
     * a pure agent `Agent I O` is a morphism of `TypeCat` — and, by
