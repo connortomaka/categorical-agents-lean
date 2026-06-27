@@ -5,8 +5,7 @@
 
   Design note on composition order:
   we write composition in DIAGRAMMATIC (left-to-right) order, so `comp f g`
-  means "do `f`, then `g`". This matches how an engineer reads an agent
-  pipeline `input → f → g → output`, and is the convention used throughout
+  means "do `f`, then `g`". Ex: `input → f → g → output`, and is the convention used throughout
   this project (see `CategoricalAgents.Agents`).
 -/
 
