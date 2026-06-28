@@ -2,7 +2,7 @@
 
 A small, **self-contained, Mathlib-free** formalisation of the category-theoretic
 foundations behind *verifiable multi-agent orchestration* — built in
-[Lean 4](https://leanprover.github.io/) as a proof-checked study project.
+[Lean 4](https://leanprover.github.io/) as a proof-checked toy project.
 
 The thesis it makes concrete: the difference between an agent pipeline that
 "usually works" and one that is **correct by construction** is not more compute —
