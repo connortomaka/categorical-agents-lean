@@ -51,10 +51,15 @@ that the development is correct.
 | [`Monad`](./CategoricalAgents/Monad.lean) | Monads in `bind`/`pure` form, the `Option` monad with all three laws proven, and **associativity of Kleisli composition**. |
 | [`Lens`](./CategoricalAgents/Lens.lean) | Lenses (bidirectional `view`/`update`), the three lens laws, and a proof that **lawful lenses compose to a lawful lens**. |
 | [`Agents`](./CategoricalAgents/Agents.lean) | Agents as typed morphisms; associative/unital pipelines; **verified delegation** (decompose → delegate → amalgamate, correct by construction); effectful agents over any monad. |
+| [`Delegation`](./CategoricalAgents/Delegation.lean) | Delegation & amalgamation **run on concrete data**; the Kleisli identity laws (completing "effectful agents form a category"); and **effectful, fail-closed amalgamation** — if any specialist's effect fails, the whole manager fails, with no partial result. |
+| [`Migration`](./CategoricalAgents/Migration.lean) | A small **data-integration / migration** application: two source schemas amalgamated into one, a validating variant that **fails closed** on inconsistent keys, and a lawful correction lens giving a verified bidirectional round-trip. |
+| [`Schema`](./CategoricalAgents/Schema.lean) | **Spivak-style schemas as categories**: foreign keys as functions (referential integrity by construction), many-to-many relations reified as **junction spans**, and **cohesion-preserving migrations** whose commuting squares are proof obligations — composed into a multi-stage pipeline verified end-to-end by construction. |
 
 Read top-to-bottom, the modules go: *the mathematics of composition* →
 *concrete categories* → *interfaces as containers* → *effects as monads* →
-*bidirectionality as lenses* → *agents that compose with proofs*.
+*bidirectionality as lenses* → *agents that compose with proofs* →
+*delegation & amalgamation, run and verified* → *data integration and
+Spivak-style schema migration, cohesion preserved by construction*.
 
 For the design rationale — why pure Lean with no Mathlib, the full
 concept-to-construct mapping, and references — see
@@ -94,7 +99,21 @@ construct earns its place:
 - **Verified delegation & amalgamation.** A manager agent that splits a task,
   delegates to specialists, and recombines results is `Agent.delegate`. It only
   type-checks when every specialist's interface matches the decomposition, and
-  `delegate_spec` proves the implementation *is* its specification.
+  `delegate_spec` proves the implementation *is* its specification. `Delegation`
+  runs this on concrete data and extends it to **fail-closed** effectful
+  amalgamation: if one specialist fails, the whole manager fails with no partial
+  output.
+
+- **Data migration with preserved cohesion.** Database schemas are categories,
+  instances are data with typed foreign keys, and a migration is a typed
+  morphism whose commuting squares (referential integrity) are *constructor
+  obligations* — so a migration that loses cohesion cannot be built, and
+  `Migration.comp` re-derives those proofs for a pipeline. Many-to-many
+  relations become **junction spans** (foreign keys are functions, hence
+  many-to-one; a span recovers many-to-many). This is the functorial-data-
+  migration idea (Spivak / CQL) recast in a **pre-hoc, proof-carrying**
+  verification stance: cohesion is verified *by construction*, not checked
+  afterward. See `Schema.lean`.
 
 - **Programs as proofs (Curry–Howard–Lambek).** A value of type `Agent I O` is
   literally a constructive proof that an `O` can be produced from an `I`.
@@ -109,6 +128,9 @@ construct earns its place:
   [Lean companion](https://github.com/rkirov/category-theory-in-context-lean).
 - M. Abbott, T. Altenkirch, N. Ghani, *Containers: constructing strictly
   positive types*, TCS (2005).
+- D. I. Spivak, *Functorial Data Migration*, arXiv:1503.03571 (2015), and the
+  [CQL](https://github.com/CategoricalData/CQL) reference implementation
+  (Conexus AI).
 - The Curry–Howard–Lambek correspondence (logic ↔ type theory ↔ cartesian
   closed categories).
 - [Mathlib4 `CategoryTheory`](https://github.com/leanprover-community/mathlib4) —
@@ -123,7 +145,14 @@ with, and contains no proprietary or confidential material from, any company;
 it formalises only public mathematics. Universe handling is kept deliberately
 simple (functors are taken between categories at a shared universe level, etc.),
 which is enough for the constructions here but is not the full generality of a
-production library like Mathlib. Natural next steps would be vertical/horizontal
-composition of natural transformations, the State and Reader monads, polymorphic
-(`get`/`put` of differing types) lenses, and packaging container extensions as
-first-class `Funct TypeCat TypeCat` values.
+production library like Mathlib.
+
+The applied modules formalise the **faithful core** of each idea rather than its
+full theory: monomorphic (not polymorphic) lenses; forward, fail-closed effects
+(not full open games / optics with residuals); and the cohesion-preserving
+**instance-and-migration layer** of functorial data migration (not the full
+`Σ ⊣ Δ ⊣ Π` Kan-extension calculus). Natural next steps would be
+vertical/horizontal composition of natural transformations, the State and Reader
+monads, polymorphic (`get`/`put` of differing types) lenses, packaging container
+extensions as first-class `Funct TypeCat TypeCat` values, and the `Σ`/`Π`
+migration functors as left/right Kan extensions.
