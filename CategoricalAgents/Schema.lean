@@ -113,3 +113,41 @@ def acmeToGlobex : Migration acme globex where
 
 end Schema
 end CategoricalAgents
+
+namespace CategoricalAgents
+namespace Schema
+
+/- ===== Pre-hoc verification of a migration *pipeline* =====
+   The novelty vs. CQL is the verification stance: a `Migration` cannot be
+   constructed unless every cohesion square is proven, and `Migration.comp`
+   re-derives those proofs for the composite. So a *pipeline* of migrations is
+   verified end-to-end by construction — no post-hoc consistency check. -/
+
+/-- A third database, re-keyed again, to form a two-stage pipeline. -/
+def initech : Org where
+  Emp    := Id3
+  Proj   := Proj2
+  Assign := Work2
+  name   := globex.name
+  mgr    := globex.mgr
+  aEmp   := globex.aEmp
+  aProj  := globex.aProj
+
+/-- The second stage is the identity re-labelling (globex → initech). -/
+def globexToInitech : Migration globex initech := Migration.id globex
+
+/-- The composite acme → initech. Its cohesion proofs are *not* re-stated here —
+    they are synthesised by `Migration.comp` from the two stages. Constructing
+    this value at all is the proof that the whole pipeline preserves the manager
+    chain, the names, and the many-to-many assignment links. -/
+def pipeline : Migration acme initech :=
+  Migration.comp acmeToGlobex globexToInitech
+
+/-- And because cohesion is carried in the type, we can *use* a pipeline proof
+    directly: the manager relation survives the entire two-stage migration. -/
+example (e : acme.Emp) :
+    pipeline.emp (acme.mgr e) = initech.mgr (pipeline.emp e) :=
+  pipeline.mgr_comm e
+
+end Schema
+end CategoricalAgents
