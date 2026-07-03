@@ -4,11 +4,11 @@
  Attempt to model agents as typed morphisms and assemble them with
   combinators whose correctness is guaranteed by the type checker:
 
-    * a pure agent `Agent I O` is a morphism of `TypeCat` — and, by
+    * a pure agent `Agent I O` is a morphism of `TypeCat` - and, by
       Curry-Howard-Lambek, a *proof* that an `O` can be produced from an `I`;
     * sequential composition is associative and unital (the category laws);
     * a "manager" agent decomposes a task, delegates to specialists and
-      amalgamates the results — and is correct by construction;
+      amalgamates the results - and is correct by construction;
     * effectful agents over any monad compose lawfully via Kleisli composition.
 -/
 import CategoricalAgents.Basic
