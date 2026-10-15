@@ -5,15 +5,15 @@ foundations behind *verifiable multi-agent orchestration* — built in
 [Lean 4](https://leanprover.github.io/) as a proof-checked toy project.
 
 The thesis it makes concrete: the difference between an agent pipeline that
-"usually works" and one that is **correct by construction** is not more compute —
-it is a type system with categorical structure. When agent interfaces are
+"usually works" and one that is **correct by construction** is not more compute, 
+but a type system with categorical structure. When agent interfaces are
 typed and composition is governed by category/functor/monad laws, an
 ill-formed orchestration simply fails to type-check, and a well-formed one
 carries a machine-checkable proof of its own coherence.
 
 Everything here is checked by Lean's kernel. There are **no `sorry`s** and **no
-axioms beyond Lean's core** — if `lake build` succeeds, every theorem in this
-repository has been verified.
+axioms beyond Lean's core**  if `lake build` succeeds, every theorem in this
+repository has been verified against the kernel.
 
 ---
 
